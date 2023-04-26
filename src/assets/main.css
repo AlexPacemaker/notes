@@ -1,5 +1,23 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(./Assets/Fonts/Montserrat-Regular.ttf);
+  font-weight: regular;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MontserratT';
+  src: url(./Assets/Fonts/Montserrat-SemiBold.ttf);
+  font-weight: bold;
+  font-style: normal;
+}
+
+* {
+  font-family: Montserrat;
 }
