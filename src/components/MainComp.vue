@@ -31,7 +31,7 @@ export default {
     const addNote = () => {
       //проверка длины собщения
       if (newNote.value.trim().length < 10) {
-        return (errorMessage.value = 'To low chars!')
+        return (errorMessage.value = 'The message must contain at least 10 characters!')
       }
       //объект, который формируется в результате работы функции
       const newNoteObj = {
@@ -87,7 +87,7 @@ export default {
     <div v-show="showModal" class="overlay">
       <div class="modal">
         <textarea v-model="newNote" name="note" id="note" cols="30" rows="10"></textarea>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
+        <p class="errorMessage" v-if="errorMessage">{{ errorMessage }}</p>
         <div class="modalBtns">
           <button @click="addNote">Add Note</button>
           <button @click=";(showModal = false), (errorMessage = '')" class="close">X</button>
@@ -216,5 +216,10 @@ hr {
 }
 .modalBtns {
   display: flex;
+}
+.errorMessage {
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 </style>
