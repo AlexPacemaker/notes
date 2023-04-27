@@ -1,57 +1,70 @@
+<!-- Данный код представляет собой компонент Vue.js, который позволяет пользователю создавать заметки с сохранением в localStorage браузера. -->
 <script>
 import { ref, onMounted } from 'vue'
+import getRandomColor from '../utils/getRandomColor'
 import NotesList from './NotesList.vue'
-
-const showModal = ref(false)
-const newNote = ref('')
-const notes = ref([])
-const errorMessage = ref('')
-
-const getRandomColor = () => {
-  return 'hsl(' + Math.random() * 360 + ', 100%, 75%)'
-}
-
-// Функция получения сохраненных заметок из localStorage
-const getSavedNotes = () => {
-  const savedNotes = localStorage.getItem('notes')
-  if (savedNotes) {
-    notes.value = JSON.parse(savedNotes)
-  }
-}
-
-const addNote = () => {
-  if (newNote.value.trim().length < 10) {
-    return (errorMessage.value = 'To low chars!')
-  }
-  const newNoteObj = {
-    id: Math.floor(Math.random() * 1000),
-    text: newNote.value,
-    date: new Date().toLocaleString(),
-    backgroundColor: getRandomColor()
-  }
-  notes.value.push(newNoteObj)
-  showModal.value = false
-  newNote.value = ''
-  // Сохраняем заметки в localStorage
-  localStorage.setItem('notes', JSON.stringify(notes.value))
-}
-
-const removeNote = (id) => {
-  const index = notes.value.findIndex((note) => note.id === id)
-  if (index !== -1) notes.value.splice(index, 1)
-  // Удаляем заметку из localStorage
-  localStorage.removeItem(`note-${id}`)
-  // Обновляем массив заметок в localStorage
-  localStorage.setItem('notes', JSON.stringify(notes.value))
-}
 
 export default {
   name: 'MainComp',
   setup() {
+    // переключатель отображения модального окна для создания новой заметки
+    const showModal = ref(false)
+    // значение новой заметки, которое вводит пользователь
+    const newNote = ref('')
+    // массив объектов заметок, полученных из localStorage
+    const notes = ref([])
+    // строка с сообщением об ошибке, которое отображается при попытке добавления заметки с недостаточным количеством символов
+    const errorMessage = ref('')
+
+    // Функция получения сохраненных заметок из localStorage
+    const getSavedNotes = () => {
+      const savedNotes = localStorage.getItem('notes')
+      if (savedNotes) {
+        notes.value = JSON.parse(savedNotes)
+      }
+    }
+    //генерирует случайный цвет при добавлении новой заметки
+    //в переменную присвоен результат вызова функции
+    const color = getRandomColor()
+
+    // функция добавления новой заметки в массив объектов заметок notes и сохранения в localStorage
+    const addNote = () => {
+      //проверка длины собщения
+      if (newNote.value.trim().length < 10) {
+        return (errorMessage.value = 'To low chars!')
+      }
+      //объект, который формируется в результате работы функции
+      const newNoteObj = {
+        id: Math.floor(Math.random() * 1000),
+        text: newNote.value,
+        date: new Date().toLocaleString(),
+        backgroundColor: color
+      }
+      //пушим объект в массив notes
+      notes.value.push(newNoteObj)
+      //закрытие модального окна формы после отрпавки новой заметки
+      showModal.value = false
+      //обнуление данных в поле ввода после закрытия окна
+      newNote.value = ''
+      // Сохраняем заметки в localStorage
+      localStorage.setItem('notes', JSON.stringify(notes.value))
+    }
+
+    //функция удаления заметки из массива объектов notes и из localStorage
+    const removeNote = (id) => {
+      const index = notes.value.findIndex((note) => note.id === id)
+      if (index !== -1) notes.value.splice(index, 1)
+      // Удаляем заметку из localStorage
+      localStorage.removeItem(`note-${id}`)
+      // Обновляем массив заметок в localStorage
+      localStorage.setItem('notes', JSON.stringify(notes.value))
+    }
+
     // Вызываем функцию при монтировании компонента, чтобы получить сохраненные заметки
     onMounted(() => {
       getSavedNotes()
     })
+
     return {
       showModal,
       newNote,
@@ -65,6 +78,10 @@ export default {
 }
 </script>
 
+<!-- В блоке template определена разметка приложения, которая включает в себя:
+    Кнопку "Add +" для открытия модального окна создания новой заметки.
+    Модальное окно с полем для ввода новой заметки.
+    Компонент NotesList, который отображает список заметок. -->
 <template>
   <main>
     <div v-show="showModal" class="overlay">
@@ -88,52 +105,50 @@ export default {
   </main>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 main {
   height: 100vh;
   width: 100vw;
-}
-.container {
-  max-width: 1000px;
-  padding: 10px;
-  margin: 0 auto;
-}
+  .container {
+    max-width: 1000px;
+    padding: 10px;
+    margin: 0 auto;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
+      h1 {
+        font-weight: bold;
+        font-size: 55px;
+        color: rgb(8, 1, 1);
+        background: white;
+        margin: 0 auto;
+        border-radius: 10px;
+        padding: 10px;
+      }
 
-h1 {
-  font-weight: bold;
-  margin-bottom: 25px;
-  font-size: 55px;
-  color: black;
-  background: white;
-  margin: 0 auto;
-  border-radius: 10px;
-  padding: 10px;
-}
+      button {
+        font-size: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        color: white;
+        background-color: blueviolet;
+        border: 1px ridge;
 
-header button {
-  font-size: 20px;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: white;
-  background-color: blueviolet;
-  border: 1px ridge;
-}
+        &:hover {
+          box-shadow: 0 0 10px 5px grey;
+        }
 
-button:hover {
-  box-shadow: 0 0 10px 5px grey;
-}
-
-button:active {
-  transform: translateY(5px);
-  transition: 0.3s ease-in-out;
+        &:active {
+          transform: translateY(5px);
+          transition: 0.3s ease-in-out;
+        }
+      }
+    }
+  }
 }
 
 hr {
@@ -159,35 +174,46 @@ hr {
   position: relative;
   display: flex;
   flex-direction: column;
-}
+  textarea {
+    border-radius: 15px;
+    margin-bottom: 20px;
+    height: 200px;
+    padding: 10px;
+  }
+  button {
+    width: 200px;
+    margin: 0 auto;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    background-color: blueviolet;
+    border: 1px ridge;
+    &:hover {
+      box-shadow: 0 0 10px 5px grey;
+    }
 
-.modal textarea {
-  border-radius: 15px;
-  margin-bottom: 20px;
-  height: 200px;
-  padding: 10px;
-}
+    &:active {
+      transform: translateY(5px);
+      transition: 0.3s ease-in-out;
+    }
+  }
+  p {
+    color: red;
+  }
+  .close {
+    background-color: rgb(136, 17, 17);
+    &:hover {
+      box-shadow: 0 0 10px 5px grey;
+    }
 
-.modal button {
-  width: 200px;
-  margin: 0 auto;
-  border-radius: 10px;
-  padding: 5px;
-  font-size: 20px;
-  cursor: pointer;
-  color: white;
-  background-color: blueviolet;
-  border: 1px ridge;
+    &:active {
+      transform: translateY(5px);
+      transition: 0.3s ease-in-out;
+    }
+  }
 }
-
-.modaL p {
-  color: red;
-}
-
-.modal .close {
-  background-color: rgb(136, 17, 17);
-}
-
 .modalBtns {
   display: flex;
 }

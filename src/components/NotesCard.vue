@@ -1,3 +1,5 @@
+<!-- Этот компонент отображает список заметок (notes) в виде карточек. Каждая заметка имеет текст (note.text), дату (note.date) и цвет фона (note.backgroundColor), который задается в атрибуте style через вычисляемое свойство объекта Vue.
+Компонент принимает в качестве свойств функции для отслеживания наведения курсора на карту (isHovered, setHoveredNote, clearHoveredNote), и функцию для удаления заметки из списка (removeNote). -->
 <script>
 export default {
   name: 'NotesCard',
@@ -31,7 +33,7 @@ export default {
   </div>
 </template>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 .card {
   width: 225px;
   height: 225px;
@@ -45,12 +47,11 @@ export default {
   margin-bottom: 20px;
   word-break: break-all;
   cursor: pointer;
-}
-
-.card:hover {
-  transform: translateY(-7px);
-  transition: 0.3s ease-in-out;
-  box-shadow: 0 0 15px 5px black;
+  &:hover {
+    transform: translateY(-7px);
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 0 15px 5px black;
+  }
 }
 
 .card:hover .date {
