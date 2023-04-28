@@ -1,7 +1,6 @@
 <!-- Данный код представляет собой компонент Vue.js, который позволяет пользователю создавать заметки с сохранением в localStorage браузера. -->
 <script>
 import { ref, onMounted } from 'vue'
-import getRandomColor from '../utils/getRandomColor'
 import NotesList from './NotesList.vue'
 
 export default {
@@ -24,8 +23,9 @@ export default {
       }
     }
     //генерирует случайный цвет при добавлении новой заметки
-    //в переменную присвоен результат вызова функции
-    const color = getRandomColor()
+    const getRandomColor = () => {
+      return 'hsl(' + Math.random() * 360 + ', 100%, 75%)'
+    }
 
     // функция добавления новой заметки в массив объектов заметок notes и сохранения в localStorage
     const addNote = () => {
@@ -38,7 +38,7 @@ export default {
         id: Math.floor(Math.random() * 1000),
         text: newNote.value,
         date: new Date().toLocaleString(),
-        backgroundColor: color
+        backgroundColor: getRandomColor()
       }
       //пушим объект в массив notes
       notes.value.push(newNoteObj)
