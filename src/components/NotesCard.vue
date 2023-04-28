@@ -45,7 +45,8 @@ export default {
   justify-content: space-between;
   margin-right: 20px;
   margin-bottom: 20px;
-  word-break: break-all;
+  word-break: break-word;
+  white-space: normal;
   cursor: pointer;
   &:hover {
     transform: translateY(-7px);
